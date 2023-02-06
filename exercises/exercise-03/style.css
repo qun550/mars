@@ -2,7 +2,7 @@
 div {
     width: 1000px;
     margin: 50px auto;
-    border: 35px solid #B0BCFF;
+    border-bottom: 8px solid #B0BCFF;
     padding: 25px;
     display: block;
   }
@@ -42,7 +42,7 @@ h2{
     text-align: center;
 } 
 
-footer {
-    font-size: 6;
+.source{
+    font-size: 12px;
     text-align: right;
 }
