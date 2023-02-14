@@ -26,6 +26,16 @@ body {
     align-self: stretch;
   }
   
+  .back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: white;
+    color: #2841DE;
+    text-decoration: none;
+    border-radius: 5px;
+  }
 
   /* Text Style */
 p{
