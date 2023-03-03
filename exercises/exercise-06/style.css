@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body { 
+    font-family: 'Fira Sans', sans-serif;
+}
+
+nav {
+    height: 60px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    background: #2841DE;
+    line-height: 60px;
+}
+
+a {
+    text-decoration: none;
+    color:white;
+}
+
+li {
+    padding: 0 40px;
+}
+
+li:hover {
+    animation: colors 5s ease 0.25s;
+}
+
+@keyframes colors {
+    0% {
+        background-color: #2841DE;
+    }
+    40% {
+        background-color: #B0BCFF;
+    }
+    60% {
+        background-color: #3885F5;
+    }
+    100% {
+        background-color: #2841DE;
+    }
+}
