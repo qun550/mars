@@ -6,7 +6,6 @@ body {
   border: 0;
   margin: 0;
   padding: 20px;
-  vertical-align: baseline;
   display: block;
 }
 
@@ -23,8 +22,14 @@ img {
 }
 
 .col-elements {
-  padding-bottom: 45px;
+  padding-bottom: 40px;
 }
+
+.col-elements a {
+  position: relative;
+  z-index: 1;
+}
+
 
 .center {
   position: fixed;
@@ -35,7 +40,7 @@ img {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 9999;
+	z-index: 1;
 }
 
 .gif {
@@ -47,12 +52,13 @@ img {
   position: fixed;
   top: 50%;
   transform: translate(-50%,-50%);
-  z-index: 1000;
+  z-index: 1;
 }
 
 .leftC {
   flex-basis: 40%;
   flex-direction: column;
+  z-index: 2;
 }
 
 .rightC {
@@ -74,3 +80,65 @@ img {
   bottom: 5%;
   transform: translate(-50%,-50%);
 }
+.col-elements a {
+  position: relative;
+  z-index: 1;
+}
+
+
+
+/* Text hover for image */
+
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  background-color: white;
+}
+
+
+.image-container:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-text a {
+  text-decoration: none;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  text-transform: uppercase;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: cal(100% -80px);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  transition: all 0.5s ease; /* add a transition effect */
+}
+
+.image-container:hover img {
+  transform: scale(1.05F); /* zoom in the image a bit on hover */
+  position: relative;
+  display: inline-block;
+  border-radius: 50%; /* set the border radius to 50% to create a circle */
+  overflow: hidden; /* clip the image inside the circle */
+}
+
+
