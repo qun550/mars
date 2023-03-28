@@ -19,3 +19,18 @@ generateBtn.addEventListener('click', () => {
 });
 
 generatedSentence.textContent = generateRandomSentence();
+
+// Theme park ride recommendations
+const age = 25;
+const height = 5;
+
+console.log("Age:", age);
+console.log("Height:", height);
+
+if (age < 8) {
+    console.log("Check out the Merry-Go-Round. You'll love it!");
+} else if (age > 8 && age < 65 && height > 4.5) {
+    console.log("Check out the Roller Coaster. It's awesome!");
+} else {
+    console.log('Why not enjoy a float down the Lazy River?');
+}
