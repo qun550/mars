@@ -191,4 +191,3 @@ function populateGrid(images, append = false) {
   // Load the default images when the page is loaded.
   populateGrid(defaultImages);
   
-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
