@@ -1,48 +1,88 @@
-
-const overlay = document.querySelector('.image-overlay');
-const gridItems = document.querySelectorAll('.grid-item');
-
-gridItems.forEach((item) => {
-  item.addEventListener('mouseover', () => {
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-  });
-
-  item.addEventListener('mouseout', () => {
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-  });
-});
-
-
-
 document.getElementById('apiBtn').addEventListener('click', function() {
   const apiInterface = document.getElementById('apiInterface');
-  
   apiInterface.classList.toggle('hidden');
 });
-
 
 function createGridItem(imageUrl) {
   const item = document.createElement('div');
   item.classList.add('grid-item');
   const img = document.createElement('img');
   img.src = imageUrl;
-  img.width = 150;
-  img.height = 150;
   item.appendChild(img);
   return item;
 }
 
-
-  
-function populateGrid(images) {
+function populateGrid(images, append = false) {
+  console.log('Populating grid with images');
   const grid = document.getElementById('grid');
-  grid.innerHTML = '';
 
+  if (!append) {
+    grid.innerHTML = '';
+  }
+  
   for (const imageUrl of images) {
     const gridItem = createGridItem(imageUrl);
     grid.appendChild(gridItem);
   }
+  
+
+  const overlay = document.getElementById('overlay');
+  const fadeInDuration = 300;
+  const fadeOutDuration = 300;
+
+  let fadeOutTimeout;
+
+  function fadeIn(element, duration) {
+    clearTimeout(fadeOutTimeout); // Cancel any ongoing fadeOut transition
+    element.style.display = 'block';
+    setTimeout(() => {
+      element.style.opacity = '1';
+    }, 10); // Short delay to ensure the display has changed before starting the transition
+  }
+
+  function fadeOut(element, duration) {
+    element.style.opacity = '0';
+    fadeOutTimeout = setTimeout(() => {
+      element.style.display = 'none';
+    }, duration);
+  }
+
+  // Re-select grid items after modifying their outerHTML
+  const gridItems = document.querySelectorAll('.grid-item');
+
+  gridItems.forEach((item) => {
+    // Remove existing event listeners
+    item.outerHTML = item.outerHTML;
+  });
+
+  // Re-select grid items after modifying their outerHTML
+  const updatedGridItems = document.querySelectorAll('.grid-item');
+
+  updatedGridItems.forEach((item) => {
+    const img = item.querySelector('img');
+
+    item.addEventListener('mouseenter', () => {
+      console.log('mouseenter event');
+      fadeIn(overlay, fadeInDuration);
+      const rect = img.getBoundingClientRect();
+      const scalingFactor = Math.min(window.innerWidth / img.width, window.innerHeight / img.height) * 0.8;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const translateX = centerX - (rect.left + img.width / 2);
+      const translateY = centerY - (rect.top + img.height / 2);
+
+      img.style.transformOrigin = '50% 50%';
+      img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scalingFactor})`;
+    });
+
+    item.addEventListener('mouseleave', () => {
+      console.log('mouseleave event');
+      fadeOut(overlay, fadeOutDuration);
+      img.style.transform = 'scale(1)';
+    });
+  });
 }
+
 
   const defaultImages = [
     'https://drive.google.com/uc?id=10qMnTrbbPrvmgIFVGeVlAF3_bfRxF4_Z',
@@ -90,36 +130,65 @@ function populateGrid(images) {
   ];
   
 
-document.getElementById('submitApiKey').addEventListener('click', function() {
-  loadDALLEImages();
-});
-
-async function getDALLEImages() {
-  // Retrieve the API key entered by the user.
-  const apiKey = document.getElementById('apiKey').value;
-
-  // Send a request to the OpenAI API to generate images.
-  const response = await fetch('https://api.openai.com/v1/images/generations', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + apiKey
-    },
-    body: JSON.stringify({
-      "model": "image-alpha-001",
-      "prompt": "chocolate ice cream cone",
-      "num_images": 50,
-      "size": "256x256",
-      "response_format": "url"
-    })
+  document.getElementById('generateBtn').addEventListener('click', function() {
+    console.log('API key submitted, loading DALL-E images');
+    loadDALLEImages();
   });
-
-  const data = await response.json();
-  const images = data.data.map(item => item.url);
-  return images;
-}
-
-// Load the default images when the page is loaded.
-populateGrid(defaultImages);
-
   
+  async function getDALLEImages() {
+    console.log('Fetching DALL-E images');
+    const apiKey = document.getElementById('apiKey').value;
+    const prompt = document.getElementById('prompt').value;
+  
+    const imagesPerRequest = 10;
+    const totalImages = 50;
+    const numRequests = totalImages / imagesPerRequest;
+    const allImages = [];
+  
+    for (let i = 0; i < numRequests; i++) {
+      const response = await fetch('https://api.openai.com/v1/images/generations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey
+        },
+        body: JSON.stringify({
+          "prompt": prompt,
+          "num_images": imagesPerRequest,
+          "size": "256x256",
+          "response_format": "url"
+        })
+      });
+  
+      const data = await response.json();
+      console.log('Data received from API:', data);
+  
+      if (data.data) {
+        const images = data.data.map(item => item.url);
+        console.log(`DALL-E images fetched (${(i + 1) * imagesPerRequest} / ${totalImages})`, images);
+        allImages.push(...images);
+      } else {
+        console.error('Unexpected data format:', data);
+        throw new Error('Unexpected data format');
+      }
+    }
+  
+    console.log('DALL-E images fetched', allImages);
+    return allImages;
+  }
+  
+  
+  
+  async function loadDALLEImages() {
+    try {
+      const images = await getDALLEImages();
+      populateGrid(images);
+    } catch (error) {
+      console.error('Error loading DALL-E images:', error);
+    }
+  }
+  
+  // Load the default images when the page is loaded.
+  populateGrid(defaultImages);
+  
+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

@@ -5,10 +5,10 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: #ffffff;
-  font-family: 'Fira Sans', sans-serif;
+::-webkit-scrollbar {
+  display: none;
 }
+
 
 /* Header */
 header {
@@ -113,16 +113,9 @@ input[type="text"] {
   transform: scale(1.1);
 }
 
-/* Overlay */
-#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: none;
-}
+
+
+
 
 #api-content {
   position: fixed;
@@ -158,6 +151,8 @@ input[type="text"] {
   grid-template-columns: repeat(auto-fit, minmax(150px, 5fr));
   grid-gap: 10px;
   padding: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
   max-width: 100%;
   margin: 50px auto;
 }
@@ -167,40 +162,58 @@ input[type="text"] {
   overflow: visible;
 }
 
+
+
 .grid-item img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  transition: all 0.5s ease;
   position: relative;
-  overflow: visible;
-  user-select: none;
-  pointer-events: auto;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
   z-index: 1;
 }
 
-  
+
+
 .grid-item:hover img {
-  transform: scale(3);
-  z-index: 2;
+  z-index: 50;
+  border-radius: 5%;
   transition: all 0.5s ease;
   user-select: none;
   pointer-events: none;
 }
 
 
-/* Image overlay */
-.image-overlay {
+
+/* Add a new class 'overlay' for the body::before */
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0);
-  z-index: 5;
-  transition: background-color 0.3s;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2; /* Increase the z-index value to cover other elements */
+  display: none; /* Add this to hide the overlay initially */
+  pointer-events: none; /* Add this to allow clicking through the overlay */
+  opacity: 0;
+  transition: opacity 0.3s;
 }
+
+
+/* Add a new class 'box' for the grid items */
+.box {
+  position: relative;
+  display: inline-block;
+}
+.box:hover {
+  z-index: 10;
+}
+.box img {
+  display: block;
+  position: relative;
+  z-index: 9;
+}
+
 
 
   
